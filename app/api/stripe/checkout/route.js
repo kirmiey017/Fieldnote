@@ -3,7 +3,7 @@ import { getRequest } from "../../../../lib/db";
 
 export async function POST(req) {
   const { id } = await req.json();
-  const item = getRequest(id);
+  const item = await getRequest(id);
 
   if (!item || !item.quote) {
     return Response.json({ error: "No quote found for this request." }, { status: 400 });
