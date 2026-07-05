@@ -2,7 +2,7 @@ import { getRequest } from "../../../lib/db";
 import TicketView from "./TicketView";
 
 export default async function RequestPage({ params }) {
-  const item = getRequest(params.id);
+  const item = await getRequest(params.id);
 
   if (!item) {
     return (
