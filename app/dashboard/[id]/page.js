@@ -1,8 +1,8 @@
 import { getRequest } from "../../../lib/db";
 import DashboardDetail from "./DashboardDetail";
 
-export default function DashboardRequestPage({ params }) {
-  const item = getRequest(params.id);
+export default async function DashboardRequestPage({ params }) {
+  const item = await getRequest(params.id);
   if (!item) {
     return <div className="wrap">Request not found.</div>;
   }
