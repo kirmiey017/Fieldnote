@@ -1,6 +1,5 @@
 "use server";
 
-import { v4 as uuidv4 } from "uuid";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import * as db from "../lib/db";
@@ -26,34 +25,34 @@ export async function submitRequestAction(formData) {
   }
 
   const id = makeRef();
-  const item = db.createRequest({ id, name, email, service, budget, message });
+  const item = await db.createRequest({ id, name, email, service, budget, message });
   await notifyConsultantOfNewRequest(item);
   redirect(`/request/${id}`);
 }
 
 export async function addClientMessageAction(id, text) {
   if (!text?.trim()) return;
-  db.addMessage(id, "client", text.trim());
+  await db.addMessage(id, "client", text.trim());
 }
 
 export async function addConsultantMessageAction(id, text) {
   if (!text?.trim()) return;
-  const item = db.addMessage(id, "consultant", text.trim());
+  const item = await db.addMessage(id, "consultant", text.trim());
   if (item) await notifyClientOfReply(item);
 }
 
 export async function sendQuoteAction(id, amount, note) {
-  const item = db.setQuote(id, amount);
+  await db.setQuote(id, amount);
   const text = note?.trim()
     ? `${note.trim()} — quote: $${amount}`
     : `Here's a quote for this scope: $${amount}.`;
-  const updated = db.addMessage(id, "consultant", text);
+  const updated = await db.addMessage(id, "consultant", text);
   if (updated) await notifyClientOfReply(updated);
-  return item;
+  return updated;
 }
 
 export async function markPaidManualAction(id) {
-  db.markPaid(id);
+  await db.markPaid(id);
 }
 
 export async function loginAction(formData) {
@@ -66,7 +65,7 @@ export async function loginAction(formData) {
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 1 week
+    maxAge: 60 * 60 * 24 * 7,
   });
   redirect("/dashboard");
 }
@@ -74,4 +73,4 @@ export async function loginAction(formData) {
 export async function logoutAction() {
   cookies().delete(SESSION_COOKIE_NAME);
   redirect("/dashboard/login");
-    }
+}
