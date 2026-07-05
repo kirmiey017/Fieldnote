@@ -2,8 +2,8 @@ import { listRequests } from "../../lib/db";
 import { STATUS_META } from "../../lib/statusMeta";
 import { logoutAction } from "../actions";
 
-export default function DashboardPage() {
-  const requests = listRequests();
+export default async function DashboardPage() {
+  const requests = await listRequests();
 
   return (
     <div className="dashboard-wrap">
@@ -45,4 +45,4 @@ export default function DashboardPage() {
       </div>
     </div>
   );
-  }
+}
