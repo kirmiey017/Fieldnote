@@ -20,7 +20,7 @@ export async function POST(req) {
     const session = event.data.object;
     const requestId = session.metadata?.requestId;
     if (requestId) {
-      markPaid(requestId);
+      await markPaid(requestId);
       await sendMail(
         process.env.NOTIFY_EMAIL,
         `Payment received — ${requestId}`,
